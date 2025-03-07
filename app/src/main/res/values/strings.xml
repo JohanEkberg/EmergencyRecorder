@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">LaEmergencia</string>
+    <string name="emergency_button_text_start">Start</string>
+    <string name="emergency_button_text_stop">Stop</string>
+</resources>

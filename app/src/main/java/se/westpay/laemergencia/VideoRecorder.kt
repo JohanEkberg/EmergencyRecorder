@@ -105,6 +105,38 @@ class VideoRecorder : IVideoRecorder {
         return File(context.getExternalFilesDir(Environment.DIRECTORY_MOVIES), fileName)
     }
 
+    override fun startRecordingSession(context: Context) {
+        try {
+            Log.d(TAG, "Starting recording session...")
+
+            val recordingSurface = _mediaRecorder!!.surface
+
+            val captureRequestBuilder = _cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD).apply {
+                addTarget(recordingSurface) // Add recording surface
+                set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO)
+            }
+
+            val sessionConfiguration = SessionConfiguration(
+                SessionConfiguration.SESSION_REGULAR, // Type of session
+                listOf(OutputConfiguration(recordingSurface)), // Output surfaces
+                Executors.newSingleThreadExecutor(),  // Executor to run the callback
+                object : CameraCaptureSession.StateCallback() {
+                    override fun onConfigured(session: CameraCaptureSession) {
+                        session.setRepeatingRequest(captureRequestBuilder.build(), null, null)
+                        startRecording(context)
+                    }
+
+                    override fun onConfigureFailed(session: CameraCaptureSession) {
+                        Log.e("Camera2Helper", "Failed to configure camera session")
+                    }
+                }
+            )
+            _cameraDevice.createCaptureSession(sessionConfiguration)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to start recording session, exception: ${e.message}")
+        }
+    }
+
     override fun startRecordingSession(context: Context, surfaceView: SurfaceView) {
         try {
             Log.d(TAG, "Starting recording session...")
@@ -172,13 +204,4 @@ class VideoRecorder : IVideoRecorder {
             _cameraDevice.close()
         }
     }
-
-//    private fun setMaxFileReached() {
-//        _mediaRecorder?.setOnInfoListener { _, what, _ ->
-//            if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED) {
-//                Log.i(TAG, "Max file size reached, stopping recording...")
-//                stopRecording()
-//            }
-//        }
-//    }
 }

@@ -12,13 +12,13 @@ navigationFragmentKtx = "2.9.0"
 navigationUiKtx = "2.9.0"
 camera2 = "1.4.2"
 activity-compose = "1.10.1"
-compose = "1.8.2"
 lifecycle = "2.9.1"
 oauth2Http = "1.23.0"
 apiClient = "1.33.2"
 apiServiceDrive = "v3-rev197-1.25.0"
 rules = "1.6.1"
 playServicesLocation = "21.3.0"
+compose-bom = "2025.06.00"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -34,13 +34,14 @@ androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", 
 androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camera2" }
 androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camera2" }
 androidx-camera-video = { group = "androidx.camera", name = "camera-video", version.ref = "camera2" }
-compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
-compose-material = { module = "androidx.compose.material:material", version.ref = "compose" }
-compose-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
+compose-ui = { module = "androidx.compose.ui:ui" }
+compose-material = { module = "androidx.compose.material:material" }
+compose-tooling = { module = "androidx.compose.ui:ui-tooling" }
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
 lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
-compose-material-icons = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose" }
+compose-material-icons = { module = "androidx.compose.material:material-icons-extended" }
 com-google-auth = { group = "com.google.auth", name = "google-auth-library-oauth2-http", version.ref = "oauth2Http" }
 com-google-api-client = { group = "com.google.api-client", name = "google-api-client-android", version.ref = "apiClient" }
 com-google-apis = { group = "com.google.apis", name = "google-api-services-drive", version.ref = "apiServiceDrive" }

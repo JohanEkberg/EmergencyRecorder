@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "QueueIt"
+rootProject.name = "EmergencyRecorder"
 include(":app")

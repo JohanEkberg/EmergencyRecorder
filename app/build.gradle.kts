@@ -1,17 +1,18 @@
-import com.android.build.api.dsl.Packaging
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.hilt.android)
+    kotlin("kapt")
 }
 
 android {
-    namespace = "se.westpay.laemergencia"
+    namespace = "se.johan.emergencyrecorder"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "se.westpay.laemergencia"
+        applicationId = "se.johan.emergencyrecorder"
         minSdk = 31
         targetSdk = 35
         versionCode = 1
@@ -61,7 +62,7 @@ dependencies {
     implementation(libs.androidx.camera.video)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.compose.ui)
-    implementation(libs.compose.material)
+    implementation(libs.compose.material3)
     implementation(libs.compose.tooling)
     implementation(libs.activity.compose)
     implementation(libs.lifecycle.viewmodel.compose)
@@ -72,7 +73,13 @@ dependencies {
     implementation(libs.com.google.apis)
     implementation(libs.androidx.rules)
     implementation(libs.play.services.location)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.navigation.compose)
+    kapt(libs.hilt.android.compiler)
     testImplementation(libs.junit)
+    androidTestImplementation(libs.hilt.android.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextFieldDefaults.contentPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -66,12 +67,25 @@ fun HomeScreen(
     val isRecording = viewModel.isRecording.collectAsState()
 
     // Observe changes in isRecording and show a toast
-    LaunchedEffect(isRecording) {
+    LaunchedEffect(isRecording.value) {
         snackbarHostState.showSnackbar(if (isRecording.value) "Recording started" else "Recording stopped")
     }
 
     Scaffold (
-        snackbarHost = @Composable { SnackbarHost(snackbarHostState) }
+        //snackbarHost = @Composable { SnackbarHost(snackbarHostState) }
+        snackbarHost = {
+            // Adjust the position of the SnackbarHost here
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                SnackbarHost(
+                    hostState = snackbarHostState,
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = 8.dp)
+                )
+            }
+        }
     ) { contentPadding ->
         Box(modifier = Modifier.fillMaxSize().padding(contentPadding).background(Color.Black)) {
             CustomCameraPreview(surfaceView, modifier = Modifier.fillMaxSize())

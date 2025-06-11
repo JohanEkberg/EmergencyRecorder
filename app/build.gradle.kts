@@ -18,7 +18,11 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        //testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // For integration test (that uses dagger/hilt)
+        testInstrumentationRunner = "se.johan.emergencyrecorder.HiltTestRunner"
+
     }
 
     buildTypes {
@@ -46,6 +50,13 @@ android {
             excludes += "META-INF/INDEX.LIST"
             excludes += "META-INF/DEPENDENCIES"
         }
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        force("androidx.test.ext:junit:1.2.1")
+        force("androidx.test.espresso:espresso-core:3.6.1")
     }
 }
 
@@ -77,9 +88,13 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.ui.test.junit4.android)
     kapt(libs.hilt.android.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.hilt.android.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4.android)
+    kaptAndroidTest(libs.hilt.android.compiler)
 }

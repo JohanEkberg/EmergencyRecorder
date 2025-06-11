@@ -5,7 +5,7 @@ import android.view.SurfaceView
 
 class StartRecordingSession(private val repository: VideoRecorderRepository) {
     @Throws(VideoRecorderException::class)
-    operator fun invoke(context: Context, surfaceView: SurfaceView) {
+    operator fun invoke(context: Context, surfaceView: SurfaceView? = null) {
         return try {
             repository.startRecordingSession(context, surfaceView)
         } catch(e: Exception) {

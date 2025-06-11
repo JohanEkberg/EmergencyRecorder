@@ -109,25 +109,35 @@ class VideoRecorderRepository {
     }
 
 
-    fun startRecordingSession(context: Context, surfaceView: SurfaceView) {
+    fun startRecordingSession(context: Context, surfaceView: SurfaceView? = null) {
         try {
             Log.d(TAG, "Starting recording session...")
 
-            val previewSurface = surfaceView.holder.surface
+            val previewSurface = surfaceView?.holder?.surface
             val recordingSurface = mediaRecorder!!.surface
 
             val captureRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD).apply {
-                addTarget(previewSurface)
+                if (previewSurface != null) {
+                    addTarget(previewSurface)
+                }
                 addTarget(recordingSurface) // Add recording surface
                 set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO)
             }
 
-            val sessionConfiguration = SessionConfiguration(
-                SessionConfiguration.SESSION_REGULAR, // Type of session
+            val outputConfigurationList = if (previewSurface != null) {
                 listOf(
                     OutputConfiguration(previewSurface),
                     OutputConfiguration(recordingSurface)
-                ), // Output surfaces
+                )
+            } else {
+                listOf(
+                    OutputConfiguration(recordingSurface)
+                )
+            }
+
+            val sessionConfiguration = SessionConfiguration(
+                SessionConfiguration.SESSION_REGULAR, // Type of session
+                outputConfigurationList, // Output surfaces
                 Executors.newSingleThreadExecutor(),  // Executor to run the callback
                 object : CameraCaptureSession.StateCallback() {
                     override fun onConfigured(session: CameraCaptureSession) {

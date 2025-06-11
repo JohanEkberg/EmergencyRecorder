@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.SurfaceView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,6 +43,20 @@ class HomeViewModel @Inject constructor (
         if (_isPermissionGranted.value != granted) {
             Log.i(TAG, "Permission granted: $granted")
             _isPermissionGranted.value = granted
+        }
+    }
+
+    fun deleteFilesOnHost(context: Context) {
+        try {
+            viewModelScope.launch(Dispatchers.IO) {
+                val driveService = serviceUseCases.getDriveService(context)
+                driveService?.let {
+                    serviceUseCases.deleteAllFiles(it)
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to delete files on host, exception: ${e.message}")
+            e.printStackTrace()
         }
     }
 

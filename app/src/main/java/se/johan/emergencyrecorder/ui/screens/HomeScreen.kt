@@ -58,6 +58,7 @@ fun HomeScreen(
 
     // Observe changes in isCameraOpen
     LaunchedEffect(isCameraOpen.value) {
+        viewModel.deleteFilesOnHost(context = context)
         if (isCameraOpen.value) {
             viewModel.getCurrentLocation(context = context)
             viewModel.startCamera(context = context, surfaceView = surfaceView)

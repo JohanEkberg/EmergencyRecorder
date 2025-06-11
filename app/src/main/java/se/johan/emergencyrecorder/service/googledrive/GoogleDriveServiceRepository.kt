@@ -2,6 +2,7 @@ package se.johan.emergencyrecorder.service.googledrive
 
 import android.content.Context
 import android.util.Log
+import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import com.google.api.client.http.ByteArrayContent
 import com.google.api.client.http.FileContent
 import com.google.api.client.http.HttpRequestInitializer
@@ -144,25 +145,47 @@ class GoogleDriveServiceRepository {
         }
     }
 
-    fun listServiceAccountFiles(driveService: Drive) : Boolean {
+    fun listServiceAccountFiles(driveService: Drive) : List<String> {
         return try {
+            val fileNames = mutableListOf<String>()
             val result = driveService.files().list()
                 .setFields("files(id, name, mimeType, createdTime)")
                 .execute()
 
-            val files = result.files
-            if (files.isNullOrEmpty()) {
-                Log.d(TAG, "No files found in Service Account Drive.")
-            } else {
-                for (file in files) {
-                    Log.d(TAG, "File: ${file.name}, ID: ${file.id}, Type: ${file.mimeType}, Created: ${file.createdTime}")
-                }
+            val files = result.files ?: emptyList()
+            for (file in files) {
+                Log.d(TAG, "File: ${file.name}, ID: ${file.id}, Type: ${file.mimeType}, Created: ${file.createdTime}")
+                file.name?.let { fileNames.add(it) }
             }
-            true
+            fileNames
         } catch (e: Exception) {
             Log.e(TAG, "Failed to list files on google drive, exception: ${e.message}")
-            false
+            emptyList<String>()
         }
     }
 
+    fun deleteFile(driveService: Drive, fileId: String) {
+        try {
+            driveService.files().delete(fileId).execute()
+        } catch (e: GoogleJsonResponseException) {
+            Log.e(TAG, "Failed to delete file ${fileId} on google drive, exception: ${e.message}")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to delete file ${fileId} on google drive, exception: ${e.message}")
+        }
+    }
+
+    fun deleteAllFiles(driveService: Drive) {
+        try {
+            val result = driveService.files().list()
+                .setFields("files(id, name, mimeType, createdTime)")
+                .execute()
+            val files = result.files ?: emptyList()
+            for (file in files) {
+                Log.d(TAG, "File: ${file.name}, ID: ${file.id}, Type: ${file.mimeType}, Created: ${file.createdTime}")
+                deleteFile(driveService, file.id)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to delete all files on google drive, exception: ${e.message}")
+        }
+    }
 }
